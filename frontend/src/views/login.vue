@@ -132,6 +132,7 @@ export default {
     }
 
     const ckeckLogin = async () => {
+      console.log(data.ua)
       try {
         const body = await checkLoginAPI({
           token: data.token,
