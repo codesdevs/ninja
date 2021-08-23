@@ -7,7 +7,11 @@
         </div>
         <span class="card-subtitle">
           欢迎上车，请系好安装全带，请按照教程打开所有活动
-          <a href="https://www.yuque.com/docs/share/5c3542b8-6fad-4503-a62d-d296f475c5ae" class="jc">教程地址</a>
+          <a
+            href="https://www.yuque.com/docs/share/5c3542b8-6fad-4503-a62d-d296f475c5ae"
+            class="jc"
+            >教程地址</a
+          >
         </span>
       </div>
     </div>
@@ -105,6 +109,7 @@ export default {
         data.okl_token = body.data.okl_token
         data.cookies = body.data.cookies
         data.QRCode = body.data.QRCode
+        data.ua = body.data.ua
         if (data.QRCode) {
           data.qrCodeVisibility = true
           data.waitLogin = true
@@ -131,6 +136,7 @@ export default {
         const body = await checkLoginAPI({
           token: data.token,
           okl_token: data.okl_token,
+          ua: data.ua,
           cookies: data.cookies,
         })
 
@@ -174,9 +180,9 @@ export default {
         ElMessage.error('cookie 解析失败，请检查后重试！')
       }
     }
-    
-    const jumpTwoCar = async()=>{
-      window.location.href="http://www.baidu.com"
+
+    const jumpTwoCar = async () => {
+      window.location.href = 'http://www.baidu.com'
     }
 
     onMounted(() => {
@@ -192,14 +198,14 @@ export default {
       ckeckLogin,
       jumpLogin,
       CKLogin,
-      jumpTwoCar
+      jumpTwoCar,
     }
   },
 }
 </script>
 
 <style scoped>
-  .jc{
-    color:red;
-  }
+.jc {
+  color: red;
+}
 </style>
