@@ -174,7 +174,7 @@ module.exports = class User {
         this.eid = body.data[0]._id;
         this.timestamp = body.data[0].timestamp;
         message = `注册成功，${this.nickName}`;
-        this.#sendNotify('Ninja 运行通知', `用户 ${this.nickName}(${decodeURIComponent(this.pt_pin)}) 已上线`);
+        this.#sendNotify('jd运行通知', `用户 ${this.nickName}(${decodeURIComponent(this.pt_pin)}) 已上线`);
       }
     } else {
       this.eid = env._id;
@@ -184,7 +184,7 @@ module.exports = class User {
       }
       this.timestamp = body.data.timestamp;
       message = `欢迎回来，${this.nickName}`;
-      this.#sendNotify('Ninja 运行通知', `用户 ${this.nickName}(${decodeURIComponent(this.pt_pin)}) 已更新 CK`);
+      this.#sendNotify('jd运行通知', `用户 ${this.nickName}(${decodeURIComponent(this.pt_pin)}) 已更新 CK`);
     }
     return {
       nickName: this.nickName,
@@ -247,7 +247,7 @@ module.exports = class User {
     if (body.code !== 200) {
       throw new UserError(body.message || '删除账户错误，请重试', 240, body.code || 200);
     }
-    this.#sendNotify('Ninja 运行通知', `用户 ${this.nickName}(${decodeURIComponent(this.pt_pin)}) 删号跑路了`);
+    this.#sendNotify('jd运行通知', `用户 ${this.nickName}(${decodeURIComponent(this.pt_pin)}) 删号跑路了`);
     return {
       message: '账户已移除',
     };
@@ -315,7 +315,7 @@ module.exports = class User {
   #sendNotify(title, content) {
     const notify = process.env.NINJA_NOTIFY || true;
     if (!notify) {
-      console.log('Ninja 通知已关闭\n' + title + '\n' + content + '\n' + '已跳过发送');
+      console.log('jd通知已关闭\n' + title + '\n' + content + '\n' + '已跳过发送');
       return;
     }
     exec(`${notifyFile} "${title}" "${content}"`, (error, stdout, stderr) => {
