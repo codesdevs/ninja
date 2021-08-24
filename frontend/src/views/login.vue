@@ -30,9 +30,9 @@
       </div>
       <div class="card-body text-center">
         <div v-if="!qrCodeVisibility" class="flex flex-col w-48 m-auto mt-4">
-          <el-button class="mt-4 ml-0" type="primary" round @click="jumpTwoCar"
+          <!-- <el-button class="mt-4 ml-0" type="primary" round @click="jumpTwoCar"
             >切换二号车</el-button
-          >
+          > -->
           <el-button class="mt-4 ml-0" type="primary" round @click="getQrcode"
             >扫描二维码登录</el-button
           >
@@ -182,9 +182,9 @@ export default {
       }
     }
 
-    const jumpTwoCar = async () => {
-      window.location.href = 'http://www.baidu.com'
-    }
+    // const jumpTwoCar = async () => {
+    //   window.location.href = 'http://www.baidu.com'
+    // }
 
     onMounted(() => {
       getInfo()
@@ -199,7 +199,7 @@ export default {
       ckeckLogin,
       jumpLogin,
       CKLogin,
-      jumpTwoCar,
+      // jumpTwoCar,
     }
   },
 }
