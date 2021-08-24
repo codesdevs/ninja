@@ -1,15 +1,35 @@
-import Index from '@/views/index.vue'
-import Login from '@/views/login.vue'
+const Index = () => import('@/views/index.vue')
+const Login = () => import('@/views/login.vue')
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
-  { path: '/', component: Index },
-  { path: '/login', component: Login },
+  {
+    path: '/',
+    component: Index
+  },
+  {
+    path: '/login',
+    component: Login
+  },
 ]
 
-const router = createRouter({
-  history: createWebHashHistory(),
-  routes,
+// const router = createRouter({
+//   mode: 'history',
+//   routes,
+// })
+
+// const router = new VueRouter({
+//   mode:'history',
+//   history: createWebHashHistory(process.env.BASE_URL),
+//   routes
+// })
+
+
+
+const router = new createRouter({
+  mode: 'history',
+  history: createWebHashHistory(process.env.BASE_URL),
+  routes
 })
 
 // router.beforeEach((to, from, next) => {
