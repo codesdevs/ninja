@@ -135,8 +135,16 @@ export default {
       data.ua = body.data.ua
       const href = `openapp.jdmobile://virtual/ad?params={"category":"jump","des":"ThirdPartyLogin","action":"to","onekeylogin":"return","url":"https://plogin.m.jd.com/cgi-bin/m/tmauth?appid=300&client_type=m&token=${data.token}","authlogin_returnurl":"weixin://","browserlogin_fromurl":"${window.location.host}"}`
       window.location.href = href
-      ckeckLogin()
-      
+      setTimeout(() => {
+        //需要延迟的代码 
+        if (data.QRCode) {
+          data.qrCodeVisibility = false
+          data.waitLogin = true
+          clearInterval(data.timer) // 清除定时器
+          data.timer = setInterval(ckeckLogin, 3000) // 设置定时器
+        }
+        //延迟时间：3秒
+      }, 3000)
     }
 
     const ckeckLogin = async () => {
