@@ -40,7 +40,7 @@ router.get('/api/status', (ctx) => {
     data: {
       version: packageJson.version,
     },
-    message: 'Ninja is already.',
+    message: 'xiaoQ',
   };
 });
 
@@ -65,10 +65,18 @@ router.get('/api/qrcode', async (ctx) => {
 
 router.post('/api/check', body(), async (ctx) => {
   const body = ctx.request.body;
+  console.log(body)
   const user = new User(body);
   const data = await user.checkQRLogin();
   ctx.body = { data };
 });
+
+router.post('/api/cktock', body(), async (ctx) => {
+  const body = ctx.request.body;
+  const user = new User(body);
+  const data = await user.cktock();
+  ctx.body = { data };
+})
 
 router.post('/api/cklogin', body(), async (ctx) => {
   const body = ctx.request.body;

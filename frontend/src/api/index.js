@@ -17,6 +17,7 @@ export function getQrcodeAPI() {
 }
 
 export function checkLoginAPI(body) {
+  console.log(body)
   return api.post('check', { json: body }).json()
 }
 
@@ -36,6 +37,11 @@ export function updateRemarkAPI(body) {
 
 export function getUserAssetsAPI(body) {
   return api.post('getUserAssets', { json: body }).json()
+}
+
+export function CKTOCKAPI(body) {
+  console.log(body)
+  return api.post('cktock', { json: body }).json()
 }
 
 

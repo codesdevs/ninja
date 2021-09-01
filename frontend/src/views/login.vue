@@ -14,8 +14,13 @@
           >
         </span>
       </div>
+      <div class="card-body">
+        <span
+          >为了您的财产安全请关闭免密支付以及打开支付验密（京东-设置-支付设置-支付验密设置）。<br />建议京东账户绑定微信以保证提现能到账。</span
+        >
+      </div>
     </div>
-    <div class="card">
+    <div class="card hidden">
       <div class="card-header">
         <div class="flex items-center justify-between">
           <p class="card-title">扫码登录</p>
@@ -45,7 +50,7 @@
       <div class="card-footer"></div>
     </div>
 
-    <div class="card hidden">
+    <div class="card">
       <div class="card-header">
         <div class="flex items-center justify-between">
           <p class="card-title">CK 登录</p>
@@ -62,7 +67,10 @@
           >登录</el-button
         >
       </div>
-      <div class="card-footet"></div>
+    </div>
+    <!-- <p><span>Frontend: 1.1.0</span><span> | </span><span>Backend: 1.1.0</span></p></div> -->
+    <div class="pt-6 pb-4 text-center text-gray-600">
+      Author：jiuyou | Edition：2.0.2 | LastUpdateTime：2021-09-01
     </div>
   </div>
 </template>
@@ -76,6 +84,7 @@ import {
   getQrcodeAPI,
   CKLoginAPI,
   checkLoginAPI,
+  CKTOCKAPI,
 } from '@/api/index'
 
 export default {
@@ -136,7 +145,7 @@ export default {
       const href = `openapp.jdmobile://virtual/ad?params={"category":"jump","des":"ThirdPartyLogin","action":"to","onekeylogin":"return","url":"https://plogin.m.jd.com/cgi-bin/m/tmauth?appid=300&client_type=m&token=${data.token}","authlogin_returnurl":"weixin://","browserlogin_fromurl":"${window.location.host}"}`
       window.location.href = href
       setTimeout(() => {
-        //需要延迟的代码 
+        //需要延迟的代码
         if (data.QRCode) {
           data.qrCodeVisibility = false
           data.waitLogin = true
@@ -179,16 +188,24 @@ export default {
     }
 
     const CKLogin = async () => {
+      const body = await CKTOCKAPI({
+        wskey: data.cookie,
+      })
+      if (body.data.cookie == 'wskey错误') {
+        ElMessage.error(body.data.cookie)
+        return
+      }
       const ptKey =
-        data.cookie.match(/pt_key=(.*?);/) &&
-        data.cookie.match(/pt_key=(.*?);/)[1]
+        body.data.cookie.match(/pt_key=(.*?);/) &&
+        body.data.cookie.match(/pt_key=(.*?);/)[1]
       const ptPin =
-        data.cookie.match(/pt_pin=(.*?);/) &&
-        data.cookie.match(/pt_pin=(.*?);/)[1]
+        body.data.cookie.match(/pt_pin=(.*?);/) &&
+        body.data.cookie.match(/pt_pin=(.*?);/)[1]
       if (ptKey && ptPin) {
         const body = await CKLoginAPI({ pt_key: ptKey, pt_pin: ptPin })
-        if (body.code === 200 && body.data.eid) {
+        if (body.data.code === 200 && body.data.eid) {
           localStorage.setItem('eid', body.data.eid)
+          router.push('/')
           ElMessage.success(body.message)
         } else {
           ElMessage.error(body.message || 'cookie 解析失败，请检查后重试！')

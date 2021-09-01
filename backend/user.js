@@ -10,7 +10,7 @@ const qlDir = process.env.QL_DIR || '/ql';
 const notifyFile = path.join(qlDir, 'shell/notify.sh');
 const { exec } = require('child_process');
 const { GET_RANDOM_TIME_UA } = require('./utils/USER_AGENT');
-
+const axios = require('axios');
 const api = got.extend({
   retry: { limit: 0 },
   responseType: 'json',
@@ -30,8 +30,9 @@ module.exports = class User {
   QRCode;
   remark;
   #s_token;
+  wskey;
 
-  constructor({ token, okl_token, cookies, pt_key, pt_pin, cookie, eid, remarks, remark, ua }) {
+  constructor({ token, okl_token, cookies, pt_key, pt_pin, cookie, eid, remarks, remark, ua, wskey }) {
     this.token = token;
     this.okl_token = okl_token;
     this.cookies = cookies;
@@ -41,6 +42,7 @@ module.exports = class User {
     this.eid = eid;
     this.remark = remark;
     this.ua = ua;
+    this.wskey = wskey
 
     if (pt_key && pt_pin) {
       this.cookie = 'pt_key=' + this.pt_key + ';pt_pin=' + this.pt_pin + ';';
@@ -55,6 +57,7 @@ module.exports = class User {
       this.remark = remarks.match(/remark=(.*?);/) && remarks.match(/remark=(.*?);/)[1];
     }
   }
+
 
   async getQRConfig() {
     this.ua = this.ua || process.env.NINJA_UA || GET_RANDOM_TIME_UA();
@@ -81,9 +84,8 @@ module.exports = class User {
 
     const nowTime = Date.now();
     // eslint-disable-next-line prettier/prettier
-    const taskPostUrl = `https://plogin.m.jd.com/cgi-bin/m/tmauthreflogurl?s_token=${
-      this.#s_token
-    }&v=${nowTime}&remember=true`;
+    const taskPostUrl = `https://plogin.m.jd.com/cgi-bin/m/tmauthreflogurl?s_token=${this.#s_token
+      }&v=${nowTime}&remember=true`;
 
     const configRes = await api({
       method: 'post',
@@ -110,6 +112,82 @@ module.exports = class User {
       );
     const cookies = configHeaders['set-cookie'][0];
     this.okl_token = cookies.substring(cookies.indexOf('=') + 1, cookies.indexOf(';'));
+  }
+  async cktock() {
+    console.log(this.wskey)
+    // var datas = JSON.stringify({
+    //   "wskey": this.wskey,
+    //   "key": 'xb3z4z2m3n847'
+    // });
+    // const response = await api({
+    //   method: 'post',
+    //   url: 'https://jdsign.tk/get',
+    //   headers: {
+    //     'User-Agent': 'Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   json: {
+    //     key: '1111',
+    //     wskey: this.wskey,
+    //   },
+    // }).json();
+    // console.log(response.body)
+    // const data = response.body;
+    // return {
+    //   errcode: data.errcode,
+    //   message: data.message,
+    // };
+
+    var data = JSON.stringify({
+      "wskey": this.wskey,
+      "key": "xb3z4z2m3n847"
+    });
+
+    var config = {
+      method: 'post',
+      url: 'https://jdsign.tk/getck',
+      headers: {
+        'user-agent': 'Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+    const result = await axios(config).then(function (response) {
+      return response.data
+    }).catch(function (error) {
+      return error
+    });
+    console.log(result)
+    return {
+      cookie: result
+    };
+
+
+
+
+
+
+    // var options = {
+    //   'method': 'POST',
+    //   'url': 'https://jdsign.tk/getck',
+    //   'headers': {
+    //     'user-agent': 'Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     "wskey": this.wskey,
+    //     "key": "1"
+    //   })
+    // };
+    // request(options, function (error, response) {
+    //   if (error) throw new Error(error);
+    //   console.log(response.body);
+    // });
+    // const data = response.body
+    // return {
+    //   errcode: data,
+    //   message: data,
+    // };
   }
 
   async checkQRLogin() {
@@ -187,6 +265,7 @@ module.exports = class User {
       this.#sendNotify('jd运行通知', `用户 ${this.nickName}(${decodeURIComponent(this.pt_pin)}) 已更新 CK`);
     }
     return {
+      code:200,
       nickName: this.nickName,
       eid: this.eid,
       timestamp: this.timestamp,
@@ -243,7 +322,7 @@ module.exports = class User {
   async delUserByEid() {
     await this.getUserInfoByEid();
     const body = await delEnv(this.eid);
-    console.log("body"+body)
+    console.log("body" + body)
     if (body.code !== 200) {
       throw new UserError(body.message || '删除账户错误，请重试', 240, body.code || 200);
     }
