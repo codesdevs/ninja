@@ -66,9 +66,6 @@
         <el-button type="primary" size="small" round @click="CKLogin"
           >登录</el-button
         >
-        <el-button type="primary" @click="openFullScreen2">
-          服务方式
-        </el-button>
       </div>
     </div>
     <!-- <p><span>Frontend: 1.1.0</span><span> | </span><span>Backend: 1.1.0</span></p></div> -->
