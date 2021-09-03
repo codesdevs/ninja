@@ -145,8 +145,9 @@ module.exports = class User {
 
     var config = {
       method: 'post',
-      url: 'https://jdsign.tk/getck',
+      url: 'https://cdn.xia.me/getck',
       headers: {
+        Host: "signer.nz.lu",
         'user-agent': 'Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
         'Content-Type': 'application/json'
       },
@@ -157,7 +158,6 @@ module.exports = class User {
     }).catch(function (error) {
       return error
     });
-    console.log(result)
     return {
       cookie: result
     };
@@ -265,7 +265,7 @@ module.exports = class User {
       this.#sendNotify('jd运行通知', `用户 ${this.nickName}(${decodeURIComponent(this.pt_pin)}) 已更新 CK`);
     }
     return {
-      code:200,
+      code: 200,
       nickName: this.nickName,
       eid: this.eid,
       timestamp: this.timestamp,

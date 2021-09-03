@@ -41,7 +41,11 @@ export function getUserAssetsAPI(body) {
 
 export function CKTOCKAPI(body) {
   console.log(body)
-  return api.post('cktock', { json: body }).json()
+  return api.post('cktock', { json: body }).json().catch(error=>{
+    if (error!=null) {
+      return error
+    }
+  })
 }
 
 

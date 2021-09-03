@@ -53,24 +53,27 @@
     <div class="card">
       <div class="card-header">
         <div class="flex items-center justify-between">
-          <p class="card-title">CK 登录</p>
+          <p class="card-title">wskey登录</p>
           <span
             class="ml-2 px-2 py-1 bg-gray-200 rounded-full font-normal text-xs"
             >余量：{{ marginCount }}</span
           >
         </div>
-        <span class="card-subtitle"> 请在下方输入您的 cookie 登录。 </span>
+        <span class="card-subtitle"> 请在下方输入您的 wskey 登录。 </span>
       </div>
       <div class="card-body text-center">
         <el-input v-model="cookie" size="small" clearable class="my-4 w-full" />
         <el-button type="primary" size="small" round @click="CKLogin"
           >登录</el-button
         >
+        <el-button type="primary" @click="openFullScreen2">
+          服务方式
+        </el-button>
       </div>
     </div>
     <!-- <p><span>Frontend: 1.1.0</span><span> | </span><span>Backend: 1.1.0</span></p></div> -->
     <div class="pt-6 pb-4 text-center text-gray-600">
-      Author：jiuyou | Edition：2.0.2 | LastUpdateTime：2021-09-01
+      Author：jiuyou | Edition：2.0.2 | LastUpdateTime：2021-09-03
     </div>
   </div>
 </template>
@@ -78,7 +81,7 @@
 <script>
 import { onMounted, reactive, toRefs } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 import {
   getInfoAPI,
   getQrcodeAPI,
@@ -91,7 +94,6 @@ export default {
   setup() {
     const router = useRouter()
     const route = useRoute()
-
     let data = reactive({
       marginCount: 0,
       allowAdd: true,
@@ -186,42 +188,60 @@ export default {
         data.waitLogin = false
       }
     }
-
     const CKLogin = async () => {
-      const body = await CKTOCKAPI({
-        wskey: data.cookie,
-      })
-      if (body.data.cookie == 'wskey错误') {
-        ElMessage.error(body.data.cookie)
+      if (data.cookie == '' || data.cookie == null) {
+        ElMessage.error('wskey不能为空！')
         return
       }
-      const ptKey =
-        body.data.cookie.match(/pt_key=(.*?);/) &&
-        body.data.cookie.match(/pt_key=(.*?);/)[1]
-      const ptPin =
-        body.data.cookie.match(/pt_pin=(.*?);/) &&
-        body.data.cookie.match(/pt_pin=(.*?);/)[1]
-      if (ptKey && ptPin) {
-        const body = await CKLoginAPI({ pt_key: ptKey, pt_pin: ptPin })
-        if (body.data.code === 200 && body.data.eid) {
-          localStorage.setItem('eid', body.data.eid)
-          router.push('/')
-          ElMessage.success(body.message)
+      const pin =
+        data.cookie.match(/pin=(.*?);/) && data.cookie.match(/pin=(.*?);/)[1]
+      const wskey =
+        data.cookie.match(/wskey=(.*?);/) &&
+        data.cookie.match(/wskey=(.*?);/)[1]
+      if (pin && wskey) {
+        console.log(pin + '\t' + wskey)
+        const loading = ElLoading.service({
+          lock: true,
+          text: '登录中。。。',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)',
+        })
+        const body = await CKTOCKAPI({
+          wskey: data.cookie,
+        })
+        if (body.data.cookie != null || body.data.cookie != '') {
+          loading.close()
+        }
+        if (body.data.cookie == 'wskey错误') {
+          ElMessage.error(body.data.cookie)
+          return
+        }
+        const ptKey =
+          body.data.cookie.match(/pt_key=(.*?);/) &&
+          body.data.cookie.match(/pt_key=(.*?);/)[1]
+        const ptPin =
+          body.data.cookie.match(/pt_pin=(.*?);/) &&
+          body.data.cookie.match(/pt_pin=(.*?);/)[1]
+        if (ptKey && ptPin) {
+          const body = await CKLoginAPI({ pt_key: ptKey, pt_pin: ptPin })
+          if (body.data.code === 200 && body.data.eid) {
+            localStorage.setItem('eid', body.data.eid)
+            router.push('/')
+            ElMessage.success(body.message)
+          } else {
+            ElMessage.error(body.message || 'cookie 解析失败，请检查后重试！')
+          }
         } else {
-          ElMessage.error(body.message || 'cookie 解析失败，请检查后重试！')
+          ElMessage.error('cookie 解析失败，请检查后重试！')
         }
       } else {
-        ElMessage.error('cookie 解析失败，请检查后重试！')
+        ElMessage.error('wskey 解析失败，请检查后重试！')
+        return
       }
     }
 
-    // const jumpTwoCar = async () => {
-    //   window.location.href = 'http://www.baidu.com'
-    // }
-
     onMounted(() => {
       getInfo()
-      // getQrcode()
     })
 
     return {
@@ -232,7 +252,6 @@ export default {
       ckeckLogin,
       jumpLogin,
       CKLogin,
-      // jumpTwoCar,
     }
   },
 }
