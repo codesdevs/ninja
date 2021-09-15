@@ -68,7 +68,6 @@
         >
       </div>
     </div>
-    <!-- <p><span>Frontend: 1.1.0</span><span> | </span><span>Backend: 1.1.0</span></p></div> -->
     <div class="pt-6 pb-4 text-center text-gray-600">
       Author：jiuyou | Edition：2.0.2 | LastUpdateTime：2021-09-03
     </div>
@@ -220,7 +219,13 @@ export default {
           body.data.cookie.match(/pt_pin=(.*?);/) &&
           body.data.cookie.match(/pt_pin=(.*?);/)[1]
         if (ptKey && ptPin) {
-          const body = await CKLoginAPI({ pt_key: ptKey, pt_pin: ptPin })
+          //wskey没问题，登陆
+          //传入值，wskey，cookie
+          const body = await CKLoginAPI({
+            pt_key: ptKey,
+            pt_pin: ptPin,
+            wskey: data.cookie,
+          })
           if (body.data.code === 200 && body.data.eid) {
             localStorage.setItem('eid', body.data.eid)
             router.push('/')

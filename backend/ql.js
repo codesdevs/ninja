@@ -39,17 +39,50 @@ module.exports.getEnvsCount = async () => {
   return data.length;
 };
 
-module.exports.addEnv = async (cookie, remarks) => {
+// module.exports.addEnv = async (cookie, remarks) => {
+//   const token = await getToken();
+//   const body = await api({
+//     method: 'post',
+//     url: 'api/envs',
+//     params: { t: Date.now() },
+//     json: [
+//       {
+//         name: 'JD_COOKIE',
+//         value: cookie,
+//         remarks,
+//       }
+//     ],
+//     headers: {
+//       Accept: 'application/json',
+//       authorization: `Bearer ${token}`,
+//       'Content-Type': 'application/json;charset=UTF-8',
+//     },
+//   }).json();
+//   return body;
+// };
+
+
+
+
+
+module.exports.addEnv = async (cookie, wskey, remarks) => {
   const token = await getToken();
   const body = await api({
     method: 'post',
     url: 'api/envs',
     params: { t: Date.now() },
-    json: [{
-      name: 'JD_COOKIE',
-      value: cookie,
-      remarks,
-    }],
+    json: [
+      {
+        name: 'JD_COOKIE',
+        value: cookie,
+        remarks,
+      },
+      {
+        name: 'JD_WSCK',
+        value: wskey,
+        remarks,
+      }
+    ],
     headers: {
       Accept: 'application/json',
       authorization: `Bearer ${token}`,
