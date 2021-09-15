@@ -69,7 +69,7 @@
       </div>
     </div>
     <div class="pt-6 pb-4 text-center text-gray-600">
-      Author：jiuyou | Edition：2.0.2 | LastUpdateTime：2021-09-03
+      Author：jiuyou | Edition：2.0.3 | LastUpdateTime：2021-09-15
     </div>
   </div>
 </template>
