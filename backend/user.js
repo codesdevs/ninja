@@ -15,6 +15,7 @@ const api = got.extend({
   retry: { limit: 0 },
   responseType: 'json',
 });
+// const {bean} = require('./jdBenChange');
 
 module.exports = class User {
   ua;
@@ -112,6 +113,22 @@ module.exports = class User {
       );
     const cookies = configHeaders['set-cookie'][0];
     this.okl_token = cookies.substring(cookies.indexOf('=') + 1, cookies.indexOf(';'));
+  }
+  //获取用户资产信息
+  async getUserAssets() {
+    console.log("获取账户信息cookie" + this.cookie);
+    console.log("获取账户信息的pt_pin"+this.pt_pin);
+    // bean();
+    return {
+      todayIncome: 1,
+      yesterdayIncome: 1,
+      yesterdayExpenditure: 1,
+      currentJingdou: 0,
+      currentRedenvelope: 0.0,
+      jingxiRedenvelope: 0.0,
+      speedRedenvelope: 0.0,
+      jdRedenvelope: 0.0,
+    };
   }
   async cktock() {
     console.log(this.wskey)
@@ -273,8 +290,8 @@ module.exports = class User {
   //   };
   // }
   async CKLogin() {
-    console.log("this.cookie="+this.cookie);
-    console.log("this.wskey="+this.wskey);
+    console.log("this.cookie=" + this.cookie);
+    console.log("this.wskey=" + this.wskey);
     let message;
     await this.#getNickname();
     const envs = await getEnvs();

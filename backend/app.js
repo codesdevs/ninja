@@ -122,6 +122,13 @@ router.get('/api/users', async (ctx) => {
   }
 });
 
+router.get('/api/getUserAssets', async (ctx) => {
+  const query = ctx.query;
+  const eid = query.eid;
+  const user = new User({ eid });
+  const data = await user.getUserAssets();
+  ctx.body = { data };
+});
 const port = process.env.NINJA_PORT || 5701;
 console.log('Start Ninja success! listening port: ' + port);
 app.listen(port);

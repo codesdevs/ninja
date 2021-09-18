@@ -92,7 +92,12 @@
 </template>
 
 <script>
-import { getUserInfoAPI, delAccountAPI, updateRemarkAPI } from '@/api/index'
+import {
+  getUserInfoAPI,
+  delAccountAPI,
+  updateRemarkAPI,
+  getUserAssetsAPI,
+} from '@/api/index'
 import { onMounted, reactive, toRefs, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
@@ -127,6 +132,8 @@ export default {
         return
       }
       const userInfo = await getUserInfoAPI(eid)
+      console.log("userInfo=");
+      console.log(userInfo)
       if (!userInfo) {
         ElMessage.error('获取用户信息失败，请重重新登录')
         logout()
@@ -137,10 +144,9 @@ export default {
       remark.value = userInfo.data.remark
     }
 
-
-    const getUserAssets = async()=>{
+    const getUserAssets = async () => {
       const eid = localStorage.getItem('eid')
-      if(!eid){
+      if (!eid) {
         return
       }
       const userAssets = await getUserAssetsAPI(eid)
@@ -148,15 +154,15 @@ export default {
         ElMessage.error('获取用户资产失败，请刷新页面')
         return
       }
+      console.log(userAssets)
       // data.todayIncome = userAssets
     }
-
 
     // onMounted(getInfo)
     onMounted(() => {
       getInfo()
       // getQrcode()
-      // getUserAssets()
+      getUserAssets()
     })
 
     const logout = () => {

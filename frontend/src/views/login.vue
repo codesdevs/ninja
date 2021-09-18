@@ -20,6 +20,16 @@
         >
       </div>
     </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="flex items-center justify-between">
+          <p class="card-title">获取wskey教程</p>
+        </div>
+      </div>
+      <div class="card-body">
+        
+      </div>
+    </div>
     <div class="card hidden">
       <div class="card-header">
         <div class="flex items-center justify-between">
@@ -203,7 +213,7 @@ export default {
           background: 'rgba(0, 0, 0, 0.7)',
         })
         const body = await CKTOCKAPI({
-          wskey: data.cookie,
+          wskey: 'pin=' + pin + ';wskey=' + wskey + ';',
         })
         if (body.data.cookie != null || body.data.cookie != '') {
           loading.close()
@@ -224,7 +234,7 @@ export default {
           const body = await CKLoginAPI({
             pt_key: ptKey,
             pt_pin: ptPin,
-            wskey: data.cookie,
+            wskey: 'pin=' + pin + ';wskey=' + wskey + ';',
           })
           if (body.data.code === 200 && body.data.eid) {
             localStorage.setItem('eid', body.data.eid)

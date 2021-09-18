@@ -35,8 +35,10 @@ export function updateRemarkAPI(body) {
   return api.post('update/remark', { json: body }).json()
 }
 
-export function getUserAssetsAPI(body) {
-  return api.post('getUserAssets', { json: body }).json()
+export function getUserAssetsAPI(eid) {
+  const searchParams = new URLSearchParams()
+  searchParams.set('eid', eid)
+  return api.get('getUserAssets', { searchParams: searchParams }).json()
 }
 
 export function CKTOCKAPI(body) {
