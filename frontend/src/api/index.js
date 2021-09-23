@@ -35,16 +35,16 @@ export function updateRemarkAPI(body) {
   return api.post('update/remark', { json: body }).json()
 }
 
-export function getUserAssetsAPI(eid) {
+export function getUserAssetsAPI(cookie) {
   const searchParams = new URLSearchParams()
-  searchParams.set('eid', eid)
+  searchParams.set('cookie', cookie)
   return api.get('getUserAssets', { searchParams: searchParams }).json()
 }
 
 export function CKTOCKAPI(body) {
   console.log(body)
-  return api.post('cktock', { json: body }).json().catch(error=>{
-    if (error!=null) {
+  return api.post('cktock', { json: body }).json().catch(error => {
+    if (error != null) {
       return error
     }
   })

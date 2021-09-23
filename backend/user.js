@@ -11,6 +11,7 @@ const notifyFile = path.join(qlDir, 'shell/notify.sh');
 const { exec } = require('child_process');
 const { GET_RANDOM_TIME_UA } = require('./utils/USER_AGENT');
 const axios = require('axios');
+const JDBean = require('./jdBenChange');
 const api = got.extend({
   retry: { limit: 0 },
   responseType: 'json',
@@ -116,18 +117,19 @@ module.exports = class User {
   }
   //获取用户资产信息
   async getUserAssets() {
-    console.log("获取账户信息cookie" + this.cookie);
-    console.log("获取账户信息的pt_pin"+this.pt_pin);
-    // bean();
+    const JdBean = new JDBean();
+    JdBean.cookie = this.cookie;
+    let response = await JdBean.bean();
+    console.log(response);
     return {
-      todayIncome: 1,
+      todayIncome: 0,
       yesterdayIncome: 1,
       yesterdayExpenditure: 1,
-      currentJingdou: 0,
-      currentRedenvelope: 0.0,
-      jingxiRedenvelope: 0.0,
-      speedRedenvelope: 0.0,
-      jdRedenvelope: 0.0,
+      currentJingdou: response.currentJingdou,
+      currentRedenvelope: response.redBalance,
+      jingxiRedenvelope: response.jingxiRedenvelope,
+      speedRedenvelope: response.speedRedenvelope,
+      jdRedenvelope: response.jdRedenvelope,
     };
   }
   async cktock() {

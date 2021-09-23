@@ -26,9 +26,7 @@
           <p class="card-title">获取wskey教程</p>
         </div>
       </div>
-      <div class="card-body">
-        
-      </div>
+      <div class="card-body"></div>
     </div>
     <div class="card hidden">
       <div class="card-header">
@@ -238,6 +236,10 @@ export default {
           })
           if (body.data.code === 200 && body.data.eid) {
             localStorage.setItem('eid', body.data.eid)
+            localStorage.setItem(
+              'cookie',
+              'pt_key=' + ptKey + ';pt_pin=' + ptPin + ';'
+            )
             router.push('/')
             ElMessage.success(body.message)
           } else {

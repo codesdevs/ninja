@@ -110,14 +110,14 @@ export default {
     let data = reactive({
       nickName: undefined,
       timestamp: undefined,
-      todayIncome: 0,
-      yesterdayIncome: 0,
-      yesterdayExpenditure: 0,
-      currentJingdou: 0,
-      currentRedenvelope: 0.0,
-      jingxiRedenvelope: 0.0,
-      speedRedenvelope: 0.0,
-      jdRedenvelope: 0.0,
+      todayIncome: '',
+      yesterdayIncome: '',
+      yesterdayExpenditure: '',
+      currentJingdou: '',
+      currentRedenvelope: '',
+      jingxiRedenvelope: '',
+      speedRedenvelope: '',
+      jdRedenvelope: '',
     })
 
     // let assets = reactive({
@@ -132,7 +132,7 @@ export default {
         return
       }
       const userInfo = await getUserInfoAPI(eid)
-      console.log("userInfo=");
+      console.log('userInfo=')
       console.log(userInfo)
       if (!userInfo) {
         ElMessage.error('获取用户信息失败，请重重新登录')
@@ -145,15 +145,24 @@ export default {
     }
 
     const getUserAssets = async () => {
-      const eid = localStorage.getItem('eid')
-      if (!eid) {
+      const cookie = localStorage.getItem('cookie')
+      console.log('index.vue获取到的cookie' + cookie)
+      if (!cookie) {
         return
       }
-      const userAssets = await getUserAssetsAPI(eid)
+      const userAssets = await getUserAssetsAPI(cookie)
       if (!userAssets) {
         ElMessage.error('获取用户资产失败，请刷新页面')
         return
       }
+      data.currentJingdou = userAssets.data.currentJingdou
+      data.currentRedenvelope = userAssets.data.currentRedenvelope
+      data.jdRedenvelope = userAssets.data.jdRedenvelope
+      data.jingxiRedenvelope = userAssets.data.jingxiRedenvelope
+      data.speedRedenvelope = userAssets.data.speedRedenvelope
+      data.todayIncome = userAssets.data.todayIncome
+      data.yesterdayExpenditure = userAssets.data.yesterdayExpenditure
+      data.yesterdayIncome = userAssets.data.yesterdayIncome
       console.log(userAssets)
       // data.todayIncome = userAssets
     }
@@ -167,6 +176,7 @@ export default {
 
     const logout = () => {
       localStorage.removeItem('eid')
+      localStorage.removeItem('cookie')
       router.push('/login')
     }
 

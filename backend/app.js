@@ -124,8 +124,8 @@ router.get('/api/users', async (ctx) => {
 
 router.get('/api/getUserAssets', async (ctx) => {
   const query = ctx.query;
-  const eid = query.eid;
-  const user = new User({ eid });
+  const cookie = query.cookie;
+  const user = new User({ cookie });
   const data = await user.getUserAssets();
   ctx.body = { data };
 });
