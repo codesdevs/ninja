@@ -26,7 +26,15 @@
           <p class="card-title">获取wskey教程</p>
         </div>
       </div>
-      <div class="card-body"></div>
+      <div class="card-body">
+        <img
+          class="flex flex-col w-48 m-auto mt-4"
+          src="@/assets/qun.png"
+          width="200"
+          height="200"
+          alt="qun"
+        />
+      </div>
     </div>
     <div class="card hidden">
       <div class="card-header">
@@ -77,7 +85,7 @@
       </div>
     </div>
     <div class="pt-6 pb-4 text-center text-gray-600">
-      Author：jiuyou | Edition：2.0.3 | LastUpdateTime：2021-09-15
+      Author：jiuyou | Edition：2.0.4 | LastUpdateTime：2021-09-23
     </div>
   </div>
 </template>
